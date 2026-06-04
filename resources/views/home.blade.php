@@ -192,8 +192,8 @@ body {
 .quick-card:hover { transform: translateY(-3px); background: #282828; }
 .quick-thumb {
   width: 100%;
-  height: 150px;
-  border-radius: 22px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
   overflow: hidden;
   background: #111;
 }
@@ -202,6 +202,7 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 50%;
 }
 .quick-label { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.55); }
 .quick-title { font-size: 1.05rem; font-weight: 800; }
@@ -240,7 +241,8 @@ body {
   border-color: rgba(255,59,48,.4);
 }
 .album-thumb {
-  height: 140px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   background: linear-gradient(135deg, #222222 0%, #ff3b30 100%);
   display: grid;
   place-items: center;
@@ -248,11 +250,13 @@ body {
   font-size: 2rem;
   font-weight: 700;
   overflow: hidden;
+  border-radius: 50%;
 }
 .album-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
 }
 .album-info { padding: 16px; }
 .album-name { font-size: 1rem; font-weight: 700; }
@@ -274,17 +278,28 @@ body {
   border-color: rgba(255,59,48,.4);
 }
 .featured-cover {
+  width: 150px;
   height: 150px;
-  border-radius: 22px;
+  border-radius: 50%;
   background: linear-gradient(135deg, #ff3b30, #cc2e28);
   overflow: hidden;
   display: grid;
   place-items: center;
+  margin-inline: auto;
+}
+.section.new-releases .featured-cover {
+  width: 100%;
+  height: 140px;
+  border-radius: 22px;
 }
 .featured-cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
+}
+.section.new-releases .featured-cover img {
+  border-radius: 22px;
 }
 .featured-title { font-size: 1rem; font-weight: 800; margin-top: 14px; }
 .featured-body { font-size: .9rem; color: rgba(255,255,255,.65); line-height: 1.7; margin-top: 10px; }
@@ -377,31 +392,31 @@ body {
           </div>
           <div class="horizontal-scroll">
             <a class="album-card" href="#">
-              <div class="album-thumb"><img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop" alt="Acoustic Afternoon"></div>
+              <div class="quick-thumb"><img src="{{ asset('images/assets/IV.jpg') }}" alt="IV Of Spade"></div>
               <div class="album-info">
                 <div class="album-name">IV Of Spade</div>
-                <div class="album-sub">Playlist • 27 tracks</div>
+                <div class="album-sub">Artist</div>
               </div>
             </a>
             <a class="album-card" href="#">
-              <div class="album-thumb"><img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=300&fit=crop" alt="Beat Machine"></div>
+              <div class="quick-thumb"><img src="{{ asset('images/assets/Zild.jpg') }}" alt="Zild"></div>
               <div class="album-info">
                 <div class="album-name">Zild</div>
-                <div class="album-sub">Playlist • 41 tracks</div>
+                <div class="album-sub">Artist</div>
               </div>
             </a>
             <a class="album-card" href="#">
-              <div class="album-thumb"><img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop" alt="Evening Acoustic"></div>
+              <div class="quick-thumb"><img src="{{ asset('images/assets/Pwedekaba.jpg') }}" alt="Pwede Ka Ba?"></div>
               <div class="album-info">
-                <div class="album-name">Joji</div>
-                <div class="album-sub">Playlist • 23 tracks</div>
+                <div class="album-name">Pwede Ka Ba?</div>
+                <div class="album-sub">Album • Frank Ely</div>
               </div>
             </a>
             <a class="album-card" href="#">
-              <div class="album-thumb"><img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop" alt="Hip Hop Hits"></div>
+              <div class="quick-thumb"><img src="{{ asset('images/assets/Slowdancing.jpg') }}" alt="Slow Dancing In The Dark"></div>
               <div class="album-info">
-                <div class="album-name">Hip Hop Hits</div>
-                <div class="album-sub">Playlist • 28 tracks</div>
+                <div class="album-name">Slow Dancing In The Dark</div>
+                <div class="album-sub">Album • Joji</div>
               </div>
             </a>
           </div>
@@ -409,48 +424,52 @@ body {
 
         <section class="section">
           <div class="section-header">
-            <div class="section-title">Made for you</div>
+            <div class="section-title">Your Favorite Artists</div>
             <a class="section-action" href="#">See more</a>
           </div>
           <div class="featured-grid">
             <div class="featured-card">
-              <div class="featured-cover"><img src="https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=400&h=300&fit=crop" alt="Fresh Finds"></div>
-              <div class="featured-title">Fresh Finds</div>
-              <div class="featured-body">Discover the music trending in your city right now.</div>
+              <div class="quick-thumb"><img src="{{ asset('images/assets/IV.jpg') }}" alt="IV Of Spade"></div>
+              <div class="featured-title">IV OF SPADE</div>
+              <div class="featured-body"> IV of Spades is OPM renowned for their distinct 1970s-inspired retro
+                 aesthetic and their infectious fusion of
+                funk, rock, and disco music</div>
             </div>
             <div class="featured-card">
-              <div class="featured-cover"><img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400&h=300&fit=crop" alt="Mood Booster"></div>
-              <div class="featured-title">Mood Booster</div>
-              <div class="featured-body">Playlists to keep your energy high and your day bright.</div>
+              <div class="quick-thumb"><img src="{{ asset('images/assets/Zild.jpg') }}" alt="Zild"></div>
+              <div class="featured-title">Zild</div>
+              <div class="featured-body">Zild (Daniel Zildjian Garon Benitez) is a Filipino singer-songwriter, musician, and producer</div>
             </div>
             <div class="featured-card">
-              <div class="featured-cover"><img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=300&fit=crop" alt="Deep Focus"></div>
-              <div class="featured-title">Deep Focus</div>
-              <div class="featured-body">Ambient and mellow tracks to help you concentrate.</div>
+              <div class="quick-thumb"><img src="{{ asset('images/assets/joji.jpg') }}" alt="Joji"></div>
+              <div class="featured-title">Joji</div>
+              <div class="featured-body">Joji’s music blends R&B, lo-fi, trip-hop, and indie rock. His style is
+                characterized by melancholic melodies,
+                introspective lyrics, and moody atmospheric production</div>
             </div>
           </div>
         </section>
 
-        <section class="section">
+        <section class="section new-releases">
           <div class="section-header">
             <div class="section-title">New releases</div>
             <a class="section-action" href="#">View all</a>
           </div>
           <div class="featured-grid">
             <a class="featured-card" href="#">
-              <div class="featured-cover"><img src="https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=400&h=300&fit=crop" alt="Night Drive"></div>
-              <div class="featured-title">Night Drive</div>
-              <div class="featured-body">New album</div>
+              <div class="quick-thumb"><img src="{{ asset('images/assets/andalucia.jpg') }}" alt="Andaluia"></div>
+              <div class="featured-title">Andaluia</div>
+              <div class="featured-body">IV Of Spade • New album</div>
             </a>
             <a class="featured-card" href="#">
-              <div class="featured-cover"><img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop" alt="Soul Sessions"></div>
-              <div class="featured-title">Soul Sessions</div>
-              <div class="featured-body">New EP</div>
+              <div class="quick-thumb"><img src="{{ asset('images/assets/superpower.jpg') }}" alt="Superpower"></div>
+              <div class="featured-title">Superpower</div>
+              <div class="featured-body">Zild • New Album</div>
             </a>
             <a class="featured-card" href="#">
-              <div class="featured-cover"><img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop" alt="Waveform"></div>
-              <div class="featured-title">Waveform</div>
-              <div class="featured-body">New single</div>
+              <div class="quick-thumb"><img src="{{ asset('images/assets/aswang.jpg') }}" alt="Aswang Sa Maynila"></div>
+              <div class="featured-title">Aswang Sa Maynila</div>
+              <div class="featured-body">Fitterkarma • New single</div>
             </a>
           </div>
         </section>
