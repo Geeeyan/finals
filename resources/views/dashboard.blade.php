@@ -557,5 +557,7 @@ weekDays.forEach((day, i) => {
 });
 </script>
 
+@include('partials.toast')
+
 </body>
 </html>

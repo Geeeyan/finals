@@ -18,9 +18,15 @@ Route::get('/home', function () {
 })->middleware('auth')->name('home');
 
 // Search
-Route::get('/search', function () {
-    return view('search');
-})->middleware('auth')->name('search');
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\MusicController;
+Route::get('/search', [SearchController::class, 'index'])
+    ->middleware('auth')
+    ->name('search');
+
+// Music CRUD
+Route::resource('music', MusicController::class)
+    ->middleware('auth');
 
 // Dashboard (admin only)
 Route::get('/dashboard', [DashboardController::class, 'index'])

@@ -216,6 +216,11 @@ body {
 }
 .nav-btn:hover { background: rgba(0,0,0,.7); }
 
+/* ─── SEARCH BAR ─── */
+.search-wrapper {
+  position: relative;
+  width: 340px;
+}
 .search-bar {
   display: flex;
   align-items: center;
@@ -223,7 +228,7 @@ body {
   padding: 10px 16px;
   background: #fff;
   border-radius: 999px;
-  width: 340px;
+  width: 100%;
 }
 .search-bar i { font-size: 18px; color: #000; }
 .search-bar input {
@@ -236,6 +241,23 @@ body {
   outline: none;
 }
 .search-bar input::placeholder { color: rgba(0,0,0,.5); }
+
+#searchDropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #282828;
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 999;
+  box-shadow: 0 8px 32px rgba(0,0,0,.6);
+  max-height: 400px;
+  overflow-y: auto;
+}
+#searchDropdown::-webkit-scrollbar { width: 4px; }
+#searchDropdown::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 99px; }
 
 .user-area {
   display: flex;
@@ -533,99 +555,6 @@ body {
 <body>
 <div class="shell">
 
-    <!-- Search Bar -->
-<div class="search-bar" style="position:relative;">
-    <i class="ti ti-search"></i>
-    <input type="search" id="searchInput"
-           placeholder="Search for songs, artists, or podcasts"
-           autocomplete="off">
-
-    <!-- Results Dropdown -->
-    <div id="searchDropdown" style="
-        display:none;
-        position:absolute;
-        top:calc(100% + 8px);
-        left:0; right:0;
-        background:#282828;
-        border-radius:12px;
-        overflow:hidden;
-        z-index:999;
-        box-shadow:0 8px 32px rgba(0,0,0,.6);
-        max-height:400px;
-        overflow-y:auto;
-    "></div>
-</div>
-
-<script>
-const searchInput = document.getElementById('searchInput');
-const dropdown = document.getElementById('searchDropdown');
-
-searchInput.addEventListener('input', async function () {
-    const q = this.value.trim();
-
-    if (q.length < 1) {
-        dropdown.style.display = 'none';
-        dropdown.innerHTML = '';
-        return;
-    }
-
-    const res = await fetch(`/search?q=${encodeURIComponent(q)}`);
-    const songs = await res.json();
-
-    if (songs.length === 0) {
-        dropdown.innerHTML = `
-            <div style="padding:20px;text-align:center;color:rgba(255,255,255,.5);font-size:.9rem;">
-                No results for "<strong style="color:#fff">${q}</strong>"
-            </div>`;
-    } else {
-        dropdown.innerHTML = songs.map(s => `
-            <div onclick="selectSong('${s.title}', '${s.artist}')" style="
-                display:flex;
-                align-items:center;
-                gap:14px;
-                padding:12px 16px;
-                cursor:pointer;
-                transition:background .15s;
-                border-bottom:1px solid rgba(255,255,255,.06);
-            " onmouseover="this.style.background='rgba(255,255,255,.1)'"
-               onmouseout="this.style.background='transparent'">
-                <div style="
-                    width:42px;height:42px;
-                    border-radius:6px;
-                    background:linear-gradient(135deg,#ff3b30,#cc2e28);
-                    display:grid;place-items:center;
-                    font-size:1.1rem;flex-shrink:0;
-                ">🎵</div>
-                <div style="flex:1;min-width:0;">
-                    <div style="font-size:.92rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                        ${s.title}
-                    </div>
-                    <div style="font-size:.78rem;color:rgba(255,255,255,.55);margin-top:2px;">
-                        ${s.artist} ${s.album ? '• ' + s.album : ''} ${s.duration ? '• ' + s.duration : ''}
-                    </div>
-                </div>
-                <i class="ti ti-player-play" style="color:rgba(255,255,255,.4);font-size:16px;"></i>
-            </div>
-        `).join('');
-    }
-
-    dropdown.style.display = 'block';
-});
-
-function selectSong(title, artist) {
-    searchInput.value = title;
-    dropdown.style.display = 'none';
-    // You can add play logic here later
-}
-
-// Close dropdown when clicking outside
-document.addEventListener('click', function(e) {
-    if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.style.display = 'none';
-    }
-});
-</script>
-
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="logo-wrap"><div class="logo">MUS.IC</div></div>
@@ -710,10 +639,19 @@ document.addEventListener('click', function(e) {
           <button class="nav-btn"><i class="ti ti-chevron-left"></i></button>
           <button class="nav-btn"><i class="ti ti-chevron-right"></i></button>
         </div>
-        <div class="search-bar">
-          <i class="ti ti-search"></i>
-          <input type="search" placeholder="What do you want to play?">
+
+        <!-- ✅ FIXED: Single search bar with working dropdown -->
+        <div class="search-wrapper">
+          <form class="search-bar" method="GET" action="{{ route('search') }}">
+            <i class="ti ti-search"></i>
+            <input name="q" type="search" id="searchInput"
+                   value="{{ request('q') }}"
+                   placeholder="What do you want to play?"
+                   autocomplete="off">
+          </form>
+          <div id="searchDropdown"></div>
         </div>
+
         <div class="user-area">
           <button class="icon-btn"><i class="ti ti-bell"></i></button>
           <a href="{{ route('profile.edit') }}" style="text-decoration:none;">
@@ -1005,7 +943,7 @@ document.addEventListener('click', function(e) {
 </div>
 
 <script>
-// Filter chips
+// ─── Filter chips ───
 document.querySelectorAll('.chip').forEach(chip => {
   chip.addEventListener('click', () => {
     document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
@@ -1013,9 +951,82 @@ document.querySelectorAll('.chip').forEach(chip => {
   });
 });
 
-// Fake progress bar
+// ─── Search bar ───
+const searchInput = document.getElementById('searchInput');
+const dropdown = document.getElementById('searchDropdown');
+
+searchInput.addEventListener('input', async function () {
+  const q = this.value.trim();
+
+  if (q.length < 1) {
+    dropdown.style.display = 'none';
+    dropdown.innerHTML = '';
+    return;
+  }
+
+  try {
+    const res = await fetch(`/search?q=${encodeURIComponent(q)}`);
+    const songs = await res.json();
+
+    if (songs.length === 0) {
+      dropdown.innerHTML = `
+        <div style="padding:20px;text-align:center;color:rgba(255,255,255,.5);font-size:.9rem;">
+          No results for "<strong style="color:#fff">${q}</strong>"
+        </div>`;
+    } else {
+      dropdown.innerHTML = songs.map(s => `
+        <div onclick="selectSong('${s.title.replace(/'/g,"\\'")}', '${(s.artist || '').replace(/'/g,"\\'")}'); " style="
+          display:flex;
+          align-items:center;
+          gap:14px;
+          padding:12px 16px;
+          cursor:pointer;
+          transition:background .15s;
+          border-bottom:1px solid rgba(255,255,255,.06);
+        "
+        onmouseover="this.style.background='rgba(255,255,255,.1)'"
+        onmouseout="this.style.background='transparent'">
+          <div style="
+            width:42px;height:42px;
+            border-radius:6px;
+            background:linear-gradient(135deg,#ff3b30,#cc2e28);
+            display:grid;place-items:center;
+            font-size:1.1rem;flex-shrink:0;
+          ">🎵</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:.92rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+              ${s.title}
+            </div>
+            <div style="font-size:.78rem;color:rgba(255,255,255,.55);margin-top:2px;">
+              ${s.artist || ''}${s.album ? ' • ' + s.album : ''}${s.duration ? ' • ' + s.duration : ''}
+            </div>
+          </div>
+          <i class="ti ti-player-play" style="color:rgba(255,255,255,.4);font-size:16px;"></i>
+        </div>
+      `).join('');
+    }
+
+    dropdown.style.display = 'block';
+  } catch (err) {
+    console.error('Search error:', err);
+  }
+});
+
+function selectSong(title, artist) {
+  searchInput.value = title;
+  dropdown.style.display = 'none';
+  // Add play logic here
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function (e) {
+  if (!searchInput.closest('.search-wrapper').contains(e.target)) {
+    dropdown.style.display = 'none';
+  }
+});
+
+// ─── Player progress bar ───
 let playing = false;
-let progress = 0;
 let totalSeconds = 151;
 let elapsed = 0;
 let interval;
@@ -1025,7 +1036,7 @@ const fill = document.getElementById('progressFill');
 const curTime = document.getElementById('curTime');
 
 function formatTime(s) {
-  return `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+  return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 }
 
 playBtn.addEventListener('click', () => {
@@ -1036,18 +1047,16 @@ playBtn.addEventListener('click', () => {
   if (playing) {
     interval = setInterval(() => {
       elapsed = Math.min(elapsed + 1, totalSeconds);
-      let pct = (elapsed / totalSeconds) * 100;
-      fill.style.width = pct + '%';
+      fill.style.width = (elapsed / totalSeconds * 100) + '%';
       curTime.textContent = formatTime(elapsed);
-      if (elapsed >= totalSeconds) clearInterval(interval), playing = false;
+      if (elapsed >= totalSeconds) { clearInterval(interval); playing = false; }
     }, 1000);
   } else {
     clearInterval(interval);
   }
 });
 
-// Click progress track to seek
-document.getElementById('progressTrack').addEventListener('click', function(e) {
+document.getElementById('progressTrack').addEventListener('click', function (e) {
   const rect = this.getBoundingClientRect();
   const pct = (e.clientX - rect.left) / rect.width;
   elapsed = Math.floor(pct * totalSeconds);
@@ -1055,5 +1064,6 @@ document.getElementById('progressTrack').addEventListener('click', function(e) {
   curTime.textContent = formatTime(elapsed);
 });
 </script>
+@include('partials.toast')
 </body>
 </html>

@@ -273,7 +273,9 @@ body {
     </form>
 
   </div>
-</div>
+  </div>
 
-</body>
-</html>
+  @include('partials.toast')
+
+  </body>
+  </html>
