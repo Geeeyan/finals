@@ -4,477 +4,957 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MUS.IC — Home</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #111111;
+  --sidebar-bg: #000;
+  --panel-bg: #1a1a1a;
+  --surface: #242424;
+  --surface-hover: #2e2e2e;
+  --accent: #ff3b30;
+  --accent2: #ff6b61;
+  --text: #fff;
+  --muted: rgba(255,255,255,.55);
+  --border: rgba(255,255,255,.08);
+  --player-bg: #181818;
+  --bar-height: 90px;
+}
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Inter', sans-serif;
-  background: #0a0a0a;
-  color: #ffffff;
+  font-family: 'Figtree', sans-serif;
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
+  overflow: hidden;
 }
-.app-shell {
-  display: flex;
-  min-height: 100vh;
+
+/* ─── LAYOUT ─── */
+.shell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  grid-template-rows: 1fr var(--bar-height);
+  height: 100vh;
+  grid-template-areas:
+    "sidebar main"
+    "player  player";
 }
+
+/* ─── SIDEBAR ─── */
 .sidebar {
-  width: 240px;
-  background: #0f0f0f;
-  border-right: 1px solid rgba(255,255,255,.08);
+  grid-area: sidebar;
+  background: var(--sidebar-bg);
   display: flex;
   flex-direction: column;
-  padding: 28px 20px;
-  gap: 16px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
+  gap: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 8px;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+.logo-wrap {
+  padding: 24px 20px 18px;
 }
 .logo {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: #ff3b30;
-  letter-spacing: .04em;
-  margin-bottom: 22px;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: .05em;
 }
-.nav-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+
+.nav-section {
+  background: #121212;
+  border-radius: 12px;
+  margin: 0 8px 8px;
+  padding: 8px;
+}
+.nav-label {
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--muted);
+  padding: 8px 12px 6px;
 }
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  color: rgba(255,255,255,.8);
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--muted);
   text-decoration: none;
-  font-size: .95rem;
-  transition: background .2s, color .2s;
+  font-size: .92rem;
+  font-weight: 600;
+  transition: color .15s, background .15s;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
 }
-.nav-item i { font-size: 18px; }
-.nav-item:hover,
-.nav-item.active {
-  background: rgba(255,59,48,.18);
-  color: #ffffff;
+.nav-item i { font-size: 20px; flex-shrink: 0; }
+.nav-item:hover { color: #fff; background: rgba(255,255,255,.07); }
+.nav-item.active { color: #fff; }
+.nav-item.active i { color: var(--accent); }
+
+.library-section {
+  background: #121212;
+  border-radius: 12px;
+  margin: 0 8px 8px;
+  padding: 8px;
+  flex: 1;
 }
-.nav-item.logout {
-  margin-top: 16px;
-  color: rgba(255,255,255,.65);
+.library-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 12px;
 }
-.nav-item.logout:hover { color: #ff8a96; }
-.sidebar-user {
-  margin-top: auto;
+.library-header span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .92rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.library-header i { font-size: 20px; }
+.library-add {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: none;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background .15s, color .15s;
+}
+.library-add:hover { background: var(--surface-hover); color: #fff; }
+
+.playlist-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px;
-  border-radius: 18px;
-  background: #141414;
+  padding: 8px 12px;
+  border-radius: 8px;
   text-decoration: none;
+  transition: background .15s;
+  cursor: pointer;
 }
-.sidebar-user img,
-.sidebar-user .avatar-fallback {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
+.playlist-item:hover { background: rgba(255,255,255,.07); }
+.playlist-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--surface);
   flex-shrink: 0;
 }
-.avatar-fallback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ff3b30;
+.playlist-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.playlist-thumb.round { border-radius: 50%; }
+.playlist-meta { flex: 1; min-width: 0; }
+.playlist-name {
+  font-size: .88rem;
+  font-weight: 600;
   color: #fff;
-  font-size: 1rem;
-  font-weight: 800;
-}
-.user-meta { display: flex; flex-direction: column; gap: 2px; }
-.user-name { font-size: .95rem; font-weight: 700; }
-.user-role { font-size: .78rem; color: rgba(255,255,255,.6); }
-.main {
-  flex: 1;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
-.main-scroll {
-  height: 100vh;
+.playlist-sub {
+  font-size: .78rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ─── MAIN ─── */
+.main {
+  grid-area: main;
+  background: var(--bg);
   overflow-y: auto;
-  padding: 28px 34px;
+  overflow-x: hidden;
 }
-.main-scroll::-webkit-scrollbar { width: 10px; }
-.main-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 999px; }
+.main::-webkit-scrollbar { width: 8px; }
+.main::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 99px; }
+
+/* Top gradient header */
+.top-gradient {
+  background: linear-gradient(180deg, rgba(255,59,48,.35) 0%, var(--bg) 100%);
+  padding: 20px 28px 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
+  gap: 14px;
+  padding-bottom: 20px;
 }
-.title-group { display: flex; flex-direction: column; gap: 8px; }
-.page-title { font-family: 'Syne', sans-serif; font-size: 2.6rem; font-weight: 800; line-height: 1; }
-.page-sub { color: rgba(255,255,255,.6); font-size: 1rem; }
+.topbar-nav { display: flex; gap: 8px; }
+.nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.5);
+  border: none;
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background .15s;
+}
+.nav-btn:hover { background: rgba(0,0,0,.7); }
+
 .search-bar {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 18px;
-  background: #121212;
-  border: 1px solid rgba(255,59,48,.12);
+  gap: 10px;
+  padding: 10px 16px;
+  background: #fff;
   border-radius: 999px;
-  min-width: 320px;
+  width: 340px;
 }
-.search-bar i { font-size: 18px; color: rgba(255,255,255,.6); }
+.search-bar i { font-size: 18px; color: #000; }
 .search-bar input {
   flex: 1;
   background: transparent;
   border: none;
-  color: #fff;
-  font-size: .95rem;
+  color: #000;
+  font-size: .9rem;
+  font-family: 'Figtree', sans-serif;
   outline: none;
 }
-.hero {
-  display: grid;
-  grid-template-columns: 1.65fr 1fr;
-  gap: 22px;
-  margin-bottom: 30px;
-}
-.hero-card {
-  position: relative;
-  border-radius: 30px;
-  padding: 36px;
-  background: linear-gradient(135deg, #ff3b30, #cc2e28);
-  overflow: hidden;
-}
-.hero-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top left, rgba(255,255,255,.18), transparent 26%);
-}
-.hero-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 3.1rem;
-  font-weight: 800;
-  line-height: 1.02;
-  max-width: 13ch;
-  margin-bottom: 18px;
-  position: relative;
-  z-index: 1;
-}
-.hero-sub {
-  font-size: 1rem;
-  color: rgba(255,255,255,.95);
-  max-width: 36ch;
-  line-height: 1.75;
-  position: relative;
-  z-index: 1;
-}
-.quick-playlist-grid {
-  display: grid;
-  grid-template-columns: repeat(3,minmax(0,1fr));
-  gap: 18px;
-}
-.quick-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 14px;
-  border-radius: 26px;
-  padding: 24px;
-  background: #181818;
-  border: 1px solid rgba(255,255,255,.08);
-  transition: transform .2s, background .2s;
-}
-.quick-card:hover { transform: translateY(-3px); background: #282828; }
-.quick-thumb {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  overflow: hidden;
-  background: #111;
-}
-.quick-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  border-radius: 50%;
-}
-.quick-label { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.55); }
-.quick-title { font-size: 1.05rem; font-weight: 800; }
-.section {
-  margin-bottom: 32px;
-}
-.section-header {
+.search-bar input::placeholder { color: rgba(0,0,0,.5); }
+
+.user-area {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 18px;
+  gap: 10px;
 }
-.section-title { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; }
-.section-action { font-size: .9rem; color: rgba(255,255,255,.6); text-decoration: none; transition: color .2s; }
-.section-action:hover { color: #fff; }
-.horizontal-scroll {
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.5);
+  border: none;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 18px;
+}
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: .95rem;
+  cursor: pointer;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.scroll-content {
+  padding: 24px 28px 32px;
+}
+
+/* ─── FILTER CHIPS ─── */
+.filter-chips {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 26px;
+  flex-wrap: wrap;
+}
+.chip {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background .15s, color .15s;
+}
+.chip.active { background: #fff; color: #000; }
+.chip:not(.active) { background: var(--surface); color: #fff; }
+.chip:not(.active):hover { background: var(--surface-hover); }
+
+/* ─── GREETING ─── */
+.greeting { font-size: 1.6rem; font-weight: 800; margin-bottom: 20px; }
+
+/* ─── QUICK GRID ─── */
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 32px;
+}
+.quick-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: .92rem;
+  transition: background .15s;
+  cursor: pointer;
+}
+.quick-item:hover { background: #3a3a3a; }
+.quick-item .qi-thumb {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.quick-item .qi-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.quick-item span { padding-right: 10px; }
+
+/* ─── SECTIONS ─── */
+.section { margin-bottom: 36px; }
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.section-title { font-size: 1.4rem; font-weight: 800; }
+.show-all {
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  transition: color .15s;
+}
+.show-all:hover { color: #fff; }
+
+/* card grid */
+.cards-row {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(220px,1fr);
-  gap: 16px;
+  grid-auto-columns: 185px;
+  gap: 18px;
   overflow-x: auto;
-  padding-bottom: 6px;
+  padding-bottom: 4px;
 }
-.horizontal-scroll::-webkit-scrollbar { display: none; }
-.album-card {
-  background: #181818;
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 24px;
-  min-width: 220px;
-  overflow: hidden;
-  transition: transform .2s, border-color .2s;
+.cards-row::-webkit-scrollbar { display: none; }
+
+.card {
+  background: var(--panel-bg);
+  border-radius: 12px;
+  padding: 16px;
+  text-decoration: none;
+  color: #fff;
+  transition: background .15s;
+  cursor: pointer;
+  position: relative;
 }
-.album-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(255,59,48,.4);
-}
-.album-thumb {
+.card:hover { background: #2a2a2a; }
+.card:hover .card-play { opacity: 1; transform: translateY(0); }
+
+.card-thumb {
   width: 100%;
-  aspect-ratio: 1 / 1;
-  background: linear-gradient(135deg, #222222 0%, #ff3b30 100%);
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface);
+  margin-bottom: 14px;
+  position: relative;
+}
+.card-thumb.round { border-radius: 50%; }
+.card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.card-play {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
   display: grid;
   place-items: center;
-  color: #0a0a0a;
-  font-size: 2rem;
-  font-weight: 700;
-  overflow: hidden;
-  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .2s, transform .2s;
+  box-shadow: 0 6px 18px rgba(0,0,0,.5);
 }
-.album-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-.album-info { padding: 16px; }
-.album-name { font-size: 1rem; font-weight: 700; }
-.album-sub { font-size: .85rem; color: rgba(255,255,255,.6); margin-top: 6px; }
-.featured-grid {
+
+.card-name { font-size: .92rem; font-weight: 700; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-sub { font-size: .8rem; color: var(--muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* ─── NOW PLAYING BAR ─── */
+.player {
+  grid-area: player;
+  background: var(--player-bg);
+  border-top: 1px solid var(--border);
   display: grid;
-  grid-template-columns: repeat(3,minmax(0,1fr));
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  padding: 0 20px;
+  gap: 16px;
+}
+
+.now-playing {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.np-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.np-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.np-meta { min-width: 0; }
+.np-title { font-size: .9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-artist { font-size: .78rem; color: var(--muted); margin-top: 3px; }
+.np-actions { display: flex; gap: 14px; align-items: center; margin-left: 8px; }
+.np-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 18px; display: grid; place-items: center; transition: color .15s; }
+.np-btn:hover { color: #fff; }
+.np-btn.liked { color: var(--accent); }
+
+.player-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.controls-row {
+  display: flex;
+  align-items: center;
   gap: 20px;
 }
-.featured-card {
-  background: #181818;
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 28px;
-  padding: 24px;
-  transition: transform .2s, border-color .2s;
-}
-.featured-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(255,59,48,.4);
-}
-.featured-cover {
-  width: 150px;
-  height: 150px;
+.ctrl-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 18px; display: grid; place-items: center; transition: color .15s; }
+.ctrl-btn:hover { color: #fff; }
+.play-btn {
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ff3b30, #cc2e28);
-  overflow: hidden;
+  background: #fff;
+  border: none;
   display: grid;
   place-items: center;
-  margin-inline: auto;
+  cursor: pointer;
+  font-size: 20px;
+  color: #000;
+  transition: transform .15s;
 }
-.section.new-releases .featured-cover {
+.play-btn:hover { transform: scale(1.06); }
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
-  height: 140px;
-  border-radius: 22px;
 }
-.featured-cover img {
-  width: 100%;
+.progress-time { font-size: .75rem; color: var(--muted); min-width: 36px; text-align: center; }
+.progress-track {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,.2);
+  border-radius: 99px;
+  position: relative;
+  cursor: pointer;
+}
+.progress-fill {
   height: 100%;
-  object-fit: cover;
+  width: 0%;
+  background: #fff;
+  border-radius: 99px;
+  transition: width .1s linear;
+  position: relative;
+}
+.progress-track:hover .progress-fill { background: var(--accent); }
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: -4px;
+  width: 12px;
+  height: 12px;
+  background: #fff;
   border-radius: 50%;
+  opacity: 0;
+  transition: opacity .15s;
 }
-.section.new-releases .featured-cover img {
-  border-radius: 22px;
+.progress-track:hover .progress-fill::after { opacity: 1; }
+
+.player-extra {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
 }
-.featured-title { font-size: 1rem; font-weight: 800; margin-top: 14px; }
-.featured-body { font-size: .9rem; color: rgba(255,255,255,.65); line-height: 1.7; margin-top: 10px; }
-@media (max-width: 1100px) {
-  .hero { grid-template-columns: 1fr; }
-  .featured-grid { grid-template-columns: 1fr; }
-  .quick-playlist-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.vol-row { display: flex; align-items: center; gap: 8px; }
+.vol-track {
+  width: 90px;
+  height: 4px;
+  background: rgba(255,255,255,.2);
+  border-radius: 99px;
+  cursor: pointer;
 }
-@media (max-width: 760px) {
-  .app-shell { flex-direction: column; }
-  .sidebar { width: 100%; height: auto; position: relative; }
-  .main-scroll { padding: 20px; }
-  .search-bar { min-width: 100%; }
-  .nav-group { flex-direction: row; flex-wrap: wrap; gap: 10px; }
-  .nav-item { flex: 1 1 calc(50% - 10px); }
-  .hero { gap: 16px; }
+.vol-fill {
+  height: 100%;
+  width: 70%;
+  background: #fff;
+  border-radius: 99px;
 }
+.vol-track:hover .vol-fill { background: var(--accent); }
 </style>
 </head>
 <body>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <div class="logo">MUS.IC</div>
-      <nav class="nav-group">
-        <a class="nav-item active" href="{{ route('home') }}"><i class="ti ti-home"></i> Home</a>
-        <a class="nav-item" href="#"><i class="ti ti-search"></i> Search</a>
-        <a class="nav-item" href="#"><i class="ti ti-layout-list"></i> Your Library</a>
-        <a class="nav-item" href="#"><i class="ti ti-playlist"></i> Made For You</a>
-        <a class="nav-item" href="#"><i class="ti ti-music"></i> New Releases</a>
-        <a class="nav-item" href="#"><i class="ti ti-radio"></i> Discover</a>
-      </nav>
-      <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit" class="nav-item logout"> <i class="ti ti-logout"></i> Logout</button>
-      </form>
-      <a class="sidebar-user" href="{{ route('profile.edit') }}">
-        @if (auth()->user()->profile_image)
-          <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" alt="Profile photo">
-        @else
-          <div class="avatar-fallback">{{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}</div>
-        @endif
-        <div class="user-meta">
-          <div class="user-name">{{ auth()->user()->name ?? 'User' }}</div>
-          <div class="user-role">Premium listener</div>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-wrap"><div class="logo">MUS.IC</div></div>
+
+    <nav class="nav-section">
+      <a class="nav-item active" href="{{ route('home') }}"><i class="ti ti-home-filled"></i> Home</a>
+      <a class="nav-item" href="#"><i class="ti ti-search"></i> Search</a>
+    </nav>
+
+    <div class="library-section">
+      <div class="library-header">
+        <span><i class="ti ti-layout-list"></i> Your Library</span>
+        <button class="library-add"><i class="ti ti-plus"></i></button>
+      </div>
+
+      <!-- Playlists -->
+      <a class="playlist-item" href="#">
+        <div class="playlist-thumb" style="background:linear-gradient(135deg,#4b3fa0,#e040fb)">
+          <img src="" alt="" onerror="this.style.display='none'">
+        </div>
+        <div class="playlist-meta">
+          <div class="playlist-name">Liked Songs</div>
+          <div class="playlist-sub">Playlist • 142 songs</div>
         </div>
       </a>
-    </aside>
-
-    <main class="main">
-      <div class="main-scroll">
-        <div class="topbar">
-          <div class="title-group">
-            <div class="page-title">Good evening, {{ auth()->user()->name ?? 'listener' }}</div>
-            <div class="page-sub">Your personalized music experience is waiting for you.</div>
-          </div>
-          <div class="search-bar">
-            <i class="ti ti-search"></i>
-            <input type="search" placeholder="Search for songs, artists, or podcasts">
-          </div>
+      <a class="playlist-item" href="#">
+        <div class="playlist-thumb"><img src="{{ asset('images/assets/IVOS.jpg') }}" alt="IVOSforLife"></div>
+        <div class="playlist-meta">
+          <div class="playlist-name">IVOSforLife</div>
+          <div class="playlist-sub">Playlist • You</div>
         </div>
-
-        <div class="hero">
-          <div class="hero-card">
-            <div class="hero-title">Your daily mix is ready.</div>
-            <div class="hero-sub">Jump back into your favorite music and explore new recommendations chosen just for you.</div>
-          </div>
-          <div class="quick-playlist-grid">
-            <a class="quick-card" href="#">
-              <div class="quick-thumb"><img src="{{ asset('images/assets/IVOS.jpg') }}" alt="IVOSforLife"></div>
-              <div class="quick-label">Playlist</div>
-              <div class="quick-title">IVOSforLife</div>
-            </a>
-            <a class="quick-card" href="#">
-               <div class="quick-thumb"><img src="{{ asset('images/assets/opm.jpg') }}" alt="OPM lang malakas"></div>
-              <div class="quick-label">Playlist</div>
-              <div class="quick-title">OPM lang malakas</div>
-            </a>
-            <a class="quick-card" href="#">
-              <div class="quick-thumb"><img src="{{ asset('images/assets/10pm.jpg') }}" alt="It's 10PM time"></div>
-              <div class="quick-label">Playlist</div>
-              <div class="quick-title">It's 10PM time</div>
-            </a>
-          </div>
+      </a>
+      <a class="playlist-item" href="#">
+        <div class="playlist-thumb"><img src="{{ asset('images/assets/opm.jpg') }}" alt="OPM lang malakas"></div>
+        <div class="playlist-meta">
+          <div class="playlist-name">OPM lang malakas</div>
+          <div class="playlist-sub">Playlist • You</div>
         </div>
+      </a>
+      <a class="playlist-item" href="#">
+        <div class="playlist-thumb"><img src="{{ asset('images/assets/10pm.jpg') }}" alt="It's 10PM time"></div>
+        <div class="playlist-meta">
+          <div class="playlist-name">It's 10PM time</div>
+          <div class="playlist-sub">Playlist • You</div>
+        </div>
+      </a>
+      <a class="playlist-item" href="#">
+        <div class="playlist-thumb round"><img src="{{ asset('images/assets/IV.jpg') }}" alt="IV Of Spade"></div>
+        <div class="playlist-meta">
+          <div class="playlist-name">IV OF SPADES</div>
+          <div class="playlist-sub">Artist</div>
+        </div>
+      </a>
+      <a class="playlist-item" href="#">
+        <div class="playlist-thumb round"><img src="{{ asset('images/assets/Zild.jpg') }}" alt="Zild"></div>
+        <div class="playlist-meta">
+          <div class="playlist-name">Zild</div>
+          <div class="playlist-sub">Artist</div>
+        </div>
+      </a>
+      <a class="playlist-item" href="#">
+        <div class="playlist-thumb"><img src="{{ asset('images/assets/andalucia.jpg') }}" alt="Andalucia"></div>
+        <div class="playlist-meta">
+          <div class="playlist-name">Andalucia</div>
+          <div class="playlist-sub">Album • IV Of Spades</div>
+        </div>
+      </a>
+    </div>
 
-        <section class="section">
-          <div class="section-header">
-            <div class="section-title">Recently played</div>
-            <a class="section-action" href="#">Show all</a>
-          </div>
-          <div class="horizontal-scroll">
-            <a class="album-card" href="#">
-              <div class="quick-thumb"><img src="{{ asset('images/assets/IV.jpg') }}" alt="IV Of Spade"></div>
-              <div class="album-info">
-                <div class="album-name">IV Of Spade</div>
-                <div class="album-sub">Artist</div>
-              </div>
-            </a>
-            <a class="album-card" href="#">
-              <div class="quick-thumb"><img src="{{ asset('images/assets/Zild.jpg') }}" alt="Zild"></div>
-              <div class="album-info">
-                <div class="album-name">Zild</div>
-                <div class="album-sub">Artist</div>
-              </div>
-            </a>
-            <a class="album-card" href="#">
-              <div class="quick-thumb"><img src="{{ asset('images/assets/Pwedekaba.jpg') }}" alt="Pwede Ka Ba?"></div>
-              <div class="album-info">
-                <div class="album-name">Pwede Ka Ba?</div>
-                <div class="album-sub">Album • Frank Ely</div>
-              </div>
-            </a>
-            <a class="album-card" href="#">
-              <div class="quick-thumb"><img src="{{ asset('images/assets/Slowdancing.jpg') }}" alt="Slow Dancing In The Dark"></div>
-              <div class="album-info">
-                <div class="album-name">Slow Dancing In The Dark</div>
-                <div class="album-sub">Album • Joji</div>
-              </div>
-            </a>
-          </div>
-        </section>
+    <!-- logout -->
+    <form method="POST" action="{{ route('logout') }}" style="padding: 8px 8px 0;">
+      @csrf
+      <button type="submit" class="nav-item logout" style="color:rgba(255,255,255,.5)"><i class="ti ti-logout"></i> Log out</button>
+    </form>
+  </aside>
 
-        <section class="section">
-          <div class="section-header">
-            <div class="section-title">Your Favorite Artists</div>
-            <a class="section-action" href="#">See more</a>
-          </div>
-          <div class="featured-grid">
-            <div class="featured-card">
-              <div class="quick-thumb"><img src="{{ asset('images/assets/IV.jpg') }}" alt="IV Of Spade"></div>
-              <div class="featured-title">IV OF SPADE</div>
-              <div class="featured-body"> IV of Spades is OPM renowned for their distinct 1970s-inspired retro
-                 aesthetic and their infectious fusion of
-                funk, rock, and disco music</div>
-            </div>
-            <div class="featured-card">
-              <div class="quick-thumb"><img src="{{ asset('images/assets/Zild.jpg') }}" alt="Zild"></div>
-              <div class="featured-title">Zild</div>
-              <div class="featured-body">Zild (Daniel Zildjian Garon Benitez) is a Filipino singer-songwriter, musician, and producer</div>
-            </div>
-            <div class="featured-card">
-              <div class="quick-thumb"><img src="{{ asset('images/assets/joji.jpg') }}" alt="Joji"></div>
-              <div class="featured-title">Joji</div>
-              <div class="featured-body">Joji’s music blends R&B, lo-fi, trip-hop, and indie rock. His style is
-                characterized by melancholic melodies,
-                introspective lyrics, and moody atmospheric production</div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section new-releases">
-          <div class="section-header">
-            <div class="section-title">New releases</div>
-            <a class="section-action" href="#">View all</a>
-          </div>
-          <div class="featured-grid">
-            <a class="featured-card" href="#">
-              <div class="quick-thumb"><img src="{{ asset('images/assets/andalucia.jpg') }}" alt="Andaluia"></div>
-              <div class="featured-title">Andaluia</div>
-              <div class="featured-body">IV Of Spade • New album</div>
-            </a>
-            <a class="featured-card" href="#">
-              <div class="quick-thumb"><img src="{{ asset('images/assets/superpower.jpg') }}" alt="Superpower"></div>
-              <div class="featured-title">Superpower</div>
-              <div class="featured-body">Zild • New Album</div>
-            </a>
-            <a class="featured-card" href="#">
-              <div class="quick-thumb"><img src="{{ asset('images/assets/aswang.jpg') }}" alt="Aswang Sa Maynila"></div>
-              <div class="featured-title">Aswang Sa Maynila</div>
-              <div class="featured-body">Fitterkarma • New single</div>
-            </a>
-          </div>
-        </section>
+  <!-- MAIN -->
+  <main class="main">
+    <div class="top-gradient">
+      <div class="topbar">
+        <div class="topbar-nav">
+          <button class="nav-btn"><i class="ti ti-chevron-left"></i></button>
+          <button class="nav-btn"><i class="ti ti-chevron-right"></i></button>
+        </div>
+        <div class="search-bar">
+          <i class="ti ti-search"></i>
+          <input type="search" placeholder="What do you want to play?">
+        </div>
+        <div class="user-area">
+          <button class="icon-btn"><i class="ti ti-bell"></i></button>
+          <a href="{{ route('profile.edit') }}" style="text-decoration:none;">
+            @if (auth()->user()->profile_image)
+              <div class="user-avatar"><img src="{{ asset('storage/' . auth()->user()->profile_image) }}" alt="avatar"></div>
+            @else
+              <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}</div>
+            @endif
+          </a>
+        </div>
       </div>
-    </main>
-  </div>
+    </div>
+
+    <div class="scroll-content">
+      <!-- Filter chips -->
+      <div class="filter-chips">
+        <button class="chip active">All</button>
+        <button class="chip">Music</button>
+        <button class="chip">Podcasts</button>
+      </div>
+
+      <!-- Greeting -->
+      <div class="greeting">Good evening, {{ auth()->user()->name ?? 'listener' }}</div>
+
+      <!-- Quick Access Grid -->
+      <div class="quick-grid">
+        <a class="quick-item" href="#">
+          <div class="qi-thumb"><img src="{{ asset('images/assets/IVOS.jpg') }}" alt="IVOSforLife"></div>
+          <span>IVOSforLife</span>
+        </a>
+        <a class="quick-item" href="#">
+          <div class="qi-thumb"><img src="{{ asset('images/assets/opm.jpg') }}" alt="OPM lang malakas"></div>
+          <span>OPM lang malakas</span>
+        </a>
+        <a class="quick-item" href="#">
+          <div class="qi-thumb"><img src="{{ asset('images/assets/10pm.jpg') }}" alt="It's 10PM time"></div>
+          <span>It's 10PM time</span>
+        </a>
+        <a class="quick-item" href="#">
+          <div class="qi-thumb" style="background:linear-gradient(135deg,#4b3fa0,#e040fb);display:grid;place-items:center;font-size:1.4rem;">♥</div>
+          <span>Liked Songs</span>
+        </a>
+        <a class="quick-item" href="#">
+          <div class="qi-thumb"><img src="{{ asset('images/assets/andalucia.jpg') }}" alt="Andalucia"></div>
+          <span>Andalucia</span>
+        </a>
+        <a class="quick-item" href="#">
+          <div class="qi-thumb"><img src="{{ asset('images/assets/superpower.jpg') }}" alt="Superpower"></div>
+          <span>Superpower</span>
+        </a>
+      </div>
+
+      <!-- New Music Friday -->
+      <section class="section">
+        <div class="section-head">
+          <div class="section-title">It's New Music Friday!</div>
+          <a class="show-all" href="#">Show all</a>
+        </div>
+        <div class="cards-row">
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/andalucia.jpg') }}" alt="Andalucia">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Andalucia</div>
+            <div class="card-sub">IV Of Spades • New Album</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/superpower.jpg') }}" alt="Superpower">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Superpower</div>
+            <div class="card-sub">Zild • New Album</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/aswang.jpg') }}" alt="Aswang Sa Maynila">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Aswang Sa Maynila</div>
+            <div class="card-sub">Fitterkarma • New Single</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/Pwedekaba.jpg') }}" alt="Pwede Ka Ba?">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Pwede Ka Ba?</div>
+            <div class="card-sub">Frank Ely • Album</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/Slowdancing.jpg') }}" alt="Slow Dancing In The Dark">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Slow Dancing In The Dark</div>
+            <div class="card-sub">Joji • Album</div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Your Top Mixes -->
+      <section class="section">
+        <div class="section-head">
+          <div class="section-title">Your top mixes</div>
+          <a class="show-all" href="#">Show all</a>
+        </div>
+        <div class="cards-row">
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/IV.jpg') }}" alt="IV Of Spade">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">OPM Mix</div>
+            <div class="card-sub">IV Of Spades, Zild, Frank Ely and more</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/joji.jpg') }}" alt="Joji">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Chill Mix</div>
+            <div class="card-sub">Joji, keshi, Mitski and more</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/IVOS.jpg') }}" alt="IVOSforLife">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">IVOSforLife Mix</div>
+            <div class="card-sub">Based on your playlist</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/opm.jpg') }}" alt="OPM">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Indie Pilipinas</div>
+            <div class="card-sub">Best of Filipino indie</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/10pm.jpg') }}" alt="Late Night">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Late Night Mix</div>
+            <div class="card-sub">Joji, keshi and more</div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Favorite Artists -->
+      <section class="section">
+        <div class="section-head">
+          <div class="section-title">Your favorite artists</div>
+          <a class="show-all" href="#">Show all</a>
+        </div>
+        <div class="cards-row">
+          <a class="card" href="#">
+            <div class="card-thumb round">
+              <img src="{{ asset('images/assets/IV.jpg') }}" alt="IV Of Spades">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">IV Of Spades</div>
+            <div class="card-sub">Artist</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb round">
+              <img src="{{ asset('images/assets/Zild.jpg') }}" alt="Zild">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Zild</div>
+            <div class="card-sub">Artist</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb round">
+              <img src="{{ asset('images/assets/joji.jpg') }}" alt="Joji">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Joji</div>
+            <div class="card-sub">Artist</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb round" style="background: var(--surface); display:grid;place-items:center;font-size:1.5rem;">🎵</div>
+            <div class="card-name">keshi</div>
+            <div class="card-sub">Artist</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb round" style="background: var(--surface); display:grid;place-items:center;font-size:1.5rem;">🎸</div>
+            <div class="card-name">Fitterkarma</div>
+            <div class="card-sub">Artist</div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Recently Played -->
+      <section class="section">
+        <div class="section-head">
+          <div class="section-title">Recently played</div>
+          <a class="show-all" href="#">Show all</a>
+        </div>
+        <div class="cards-row">
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/Slowdancing.jpg') }}" alt="Slow Dancing">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Slow Dancing In The Dark</div>
+            <div class="card-sub">Joji</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/Pwedekaba.jpg') }}" alt="Pwede Ka Ba?">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Pwede Ka Ba?</div>
+            <div class="card-sub">Frank Ely</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/andalucia.jpg') }}" alt="Andalucia">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Andalucia</div>
+            <div class="card-sub">IV Of Spades</div>
+          </a>
+          <a class="card" href="#">
+            <div class="card-thumb">
+              <img src="{{ asset('images/assets/superpower.jpg') }}" alt="Superpower">
+              <button class="card-play"><i class="ti ti-player-play-filled"></i></button>
+            </div>
+            <div class="card-name">Superpower</div>
+            <div class="card-sub">Zild</div>
+          </a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- NOW PLAYING BAR -->
+  <footer class="player">
+    <div class="now-playing">
+      <div class="np-thumb"><img src="{{ asset('images/assets/Slowdancing.jpg') }}" alt="Now Playing"></div>
+      <div class="np-meta">
+        <div class="np-title">Slow Dancing In The Dark</div>
+        <div class="np-artist">Joji</div>
+      </div>
+      <div class="np-actions">
+        <button class="np-btn liked"><i class="ti ti-heart-filled"></i></button>
+        <button class="np-btn"><i class="ti ti-picture-in-picture"></i></button>
+      </div>
+    </div>
+
+    <div class="player-controls">
+      <div class="controls-row">
+        <button class="ctrl-btn"><i class="ti ti-arrows-shuffle"></i></button>
+        <button class="ctrl-btn"><i class="ti ti-player-skip-back-filled"></i></button>
+        <button class="play-btn" id="playBtn"><i class="ti ti-player-play-filled"></i></button>
+        <button class="ctrl-btn"><i class="ti ti-player-skip-forward-filled"></i></button>
+        <button class="ctrl-btn"><i class="ti ti-repeat"></i></button>
+      </div>
+      <div class="progress-bar">
+        <span class="progress-time" id="curTime">0:00</span>
+        <div class="progress-track" id="progressTrack">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span class="progress-time">2:31</span>
+      </div>
+    </div>
+
+    <div class="player-extra">
+      <button class="ctrl-btn"><i class="ti ti-microphone-2"></i></button>
+      <button class="ctrl-btn"><i class="ti ti-list"></i></button>
+      <button class="ctrl-btn"><i class="ti ti-device-speaker"></i></button>
+      <div class="vol-row">
+        <button class="ctrl-btn"><i class="ti ti-volume"></i></button>
+        <div class="vol-track"><div class="vol-fill"></div></div>
+      </div>
+      <button class="ctrl-btn"><i class="ti ti-arrows-maximize"></i></button>
+    </div>
+  </footer>
+</div>
+
+<script>
+// Filter chips
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+
+// Fake progress bar
+let playing = false;
+let progress = 0;
+let totalSeconds = 151;
+let elapsed = 0;
+let interval;
+
+const playBtn = document.getElementById('playBtn');
+const fill = document.getElementById('progressFill');
+const curTime = document.getElementById('curTime');
+
+function formatTime(s) {
+  return `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+}
+
+playBtn.addEventListener('click', () => {
+  playing = !playing;
+  playBtn.innerHTML = playing
+    ? '<i class="ti ti-player-pause-filled"></i>'
+    : '<i class="ti ti-player-play-filled"></i>';
+  if (playing) {
+    interval = setInterval(() => {
+      elapsed = Math.min(elapsed + 1, totalSeconds);
+      let pct = (elapsed / totalSeconds) * 100;
+      fill.style.width = pct + '%';
+      curTime.textContent = formatTime(elapsed);
+      if (elapsed >= totalSeconds) clearInterval(interval), playing = false;
+    }, 1000);
+  } else {
+    clearInterval(interval);
+  }
+});
+
+// Click progress track to seek
+document.getElementById('progressTrack').addEventListener('click', function(e) {
+  const rect = this.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  elapsed = Math.floor(pct * totalSeconds);
+  fill.style.width = (pct * 100) + '%';
+  curTime.textContent = formatTime(elapsed);
+});
+</script>
 </body>
 </html>
