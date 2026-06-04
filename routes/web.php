@@ -17,6 +17,11 @@ Route::get('/home', function () {
     return view('home');
 })->middleware('auth')->name('home');
 
+// Search
+Route::get('/search', function () {
+    return view('search');
+})->middleware('auth')->name('search');
+
 // Dashboard (admin only)
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified', 'role:admin'])
