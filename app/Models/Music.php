@@ -9,9 +9,17 @@ class Music extends Model
 {
     use HasFactory;
 
+    protected $table = 'music';
+
     protected $fillable = [
         'title',
         'artist',
         'album',
+        'genre',
+        'plays',
+    ];
+
+    protected $casts = [
+        'plays' => 'integer',
     ];
 }
