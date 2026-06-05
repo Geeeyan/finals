@@ -7,10 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
-/* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Base ── */
 body {
   font-family: 'Inter', sans-serif;
   background: #0a0a0a;
@@ -19,7 +17,6 @@ body {
   display: flex;
 }
 
-/* ── Sidebar ── */
 .sidebar {
   width: 220px;
   background: #111;
@@ -72,14 +69,12 @@ body {
 .nav-item.logout { color: rgba(220,53,69,.7); }
 .nav-item.logout:hover { background: rgba(220,53,69,.08); color: #ff8a96; }
 
-/* ── Main ── */
 .main {
   flex: 1;
   overflow-y: auto;
   padding: 28px 32px;
 }
 
-/* ── Topbar ── */
 .topbar {
   display: flex;
   align-items: center;
@@ -144,7 +139,6 @@ body {
   font-weight: 700;
 }
 
-/* ── Stat cards ── */
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -175,7 +169,6 @@ body {
   margin-bottom: 6px;
 }
 
-/* ── Badges ── */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -190,7 +183,6 @@ body {
 .badge-active { background: rgba(30,200,90,.12);  color: #36d870; }
 .badge-admin  { background: rgba(255,59,48,.12);  color: #ff3b30; }
 
-/* ── Grid layouts ── */
 .mid, .bottom {
   display: grid;
   gap: 14px;
@@ -198,7 +190,6 @@ body {
   grid-template-columns: 1.4fr 1fr;
 }
 
-/* ── Cards ── */
 .card {
   background: #161616;
   border: 1px solid rgba(255,255,255,.07);
@@ -228,7 +219,6 @@ body {
 
 .card-action:hover { color: #ff3b30; }
 
-/* ── Chart ── */
 .chart-bars {
   display: flex;
   align-items: flex-end;
@@ -261,7 +251,6 @@ body {
 
 .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-/* ── Track list ── */
 .track-list { display: flex; flex-direction: column; gap: 2px; }
 
 .track {
@@ -275,14 +264,33 @@ body {
 
 .track:hover { background: rgba(255,255,255,.04); }
 
-.track-num    { font-size: .75rem; color: rgba(255,255,255,.2); width: 16px; text-align: center; flex-shrink: 0; }
-.track-art    { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.track-num  { font-size: .75rem; color: rgba(255,255,255,.2); width: 16px; text-align: center; flex-shrink: 0; }
+
+.track-art {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.track-art-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: #1e1e1e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
 .track-info   { flex: 1; min-width: 0; }
 .track-name   { font-size: .85rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .track-artist { font-size: .75rem; color: rgba(255,255,255,.35); margin-top: 2px; }
 .track-plays  { font-size: .78rem; color: rgba(255,255,255,.3); flex-shrink: 0; }
 
-/* ── User rows ── */
 .user-row {
   display: flex;
   align-items: center;
@@ -309,7 +317,6 @@ body {
 .user-name  { font-size: .85rem; font-weight: 500; }
 .user-email { font-size: .75rem; color: rgba(255,255,255,.35); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* ── Genre breakdown ── */
 .genre-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 
 .genre-label  { font-size: .78rem; color: rgba(255,255,255,.5); width: 80px; flex-shrink: 0; }
@@ -325,7 +332,6 @@ body {
 .genre-bar-fill { height: 100%; border-radius: 3px; }
 .genre-pct { font-size: .72rem; color: rgba(255,255,255,.3); width: 34px; text-align: right; }
 
-/* ── Responsive ── */
 @media (max-width: 1100px) {
   .stats { grid-template-columns: repeat(2, 1fr); }
 }
@@ -336,7 +342,6 @@ body {
 
 @media (max-width: 640px) {
   body { flex-direction: column; }
-
   .sidebar {
     width: 100%;
     height: auto;
@@ -345,7 +350,6 @@ body {
     padding: 12px;
     position: relative;
   }
-
   .logo { margin-bottom: 0; width: 100%; }
   .nav-section { display: none; }
   .main { padding: 16px; }
@@ -368,15 +372,13 @@ body {
 
   <div class="nav-section">Analytics</div>
   <a href="#" class="nav-item"><i class="ti ti-chart-bar"></i>Reports</a>
-  <a href="#" class="nav-item"><i class="ti ti-cash"></i>Revenue</a>
 
   <div class="nav-section">System</div>
   <a href="#" class="nav-item"><i class="ti ti-settings"></i>Settings</a>
-  <a href="#" class="nav-item"><i class="ti ti-shield"></i>Permissions</a>
+
 
   <div style="flex:1"></div>
 
-  {{-- Logout --}}
   <form method="POST" action="{{ route('logout') }}">
     @csrf
     <button type="submit" class="nav-item logout" style="width:100%;border:none;background:none;cursor:pointer;">
@@ -420,11 +422,7 @@ body {
       <div class="stat-val">{{ number_format($totalTracks) }}</div>
       <span class="badge badge-up"><i class="ti ti-music" style="font-size:11px"></i>Library</span>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Revenue (MTD)</div>
-      <div class="stat-val">${{ number_format($revenueMTD, 2) }}</div>
-      <span class="badge badge-new"><i class="ti ti-calendar" style="font-size:11px"></i>This month</span>
-    </div>
+
   </div>
 
   {{-- Mid: Chart + Top Tracks --}}
@@ -451,17 +449,21 @@ body {
       <div class="track-list">
         @forelse ($topTracks as $i => $t)
           @php
-            $artBgs   = ['#1a1a2e','#1a2a1a','#2a1a1a','#2a2a1a','#1a2a2a'];
-            $artIcons = ['🎵','🎸','🎹','🥁','🎤'];
             $plays = $t->plays >= 1000000
               ? number_format($t->plays / 1000000, 1).'M'
               : ($t->plays >= 1000 ? number_format($t->plays / 1000, 1).'K' : $t->plays);
           @endphp
           <div class="track">
             <div class="track-num">{{ $i + 1 }}</div>
-            <div class="track-art" style="background:{{ $artBgs[$i % count($artBgs)] }}">
-              {{ $artIcons[$i % count($artIcons)] }}
-            </div>
+            <img
+              class="track-art"
+              src=""
+              alt="{{ $t->title }}"
+              data-title="{{ $t->title }}"
+              data-artist="{{ $t->artist }}"
+              style="display:none;"
+            >
+            <div class="track-art-placeholder" data-placeholder>🎵</div>
             <div class="track-info">
               <div class="track-name">{{ $t->title }}</div>
               <div class="track-artist">{{ $t->artist }}</div>
@@ -473,6 +475,7 @@ body {
         @endforelse
       </div>
     </div>
+
   </div>
 
   {{-- Bottom: Recent Users + Genre Breakdown --}}
@@ -494,8 +497,8 @@ body {
       @endphp
       @forelse ($recentUsers as $i => $u)
         @php
-          $initials    = strtoupper(implode('', array_map(fn($w) => $w[0], explode(' ', trim($u->name)))));
-          $initials    = substr($initials, 0, 2);
+          $initials = strtoupper(implode('', array_map(fn($w) => $w[0], explode(' ', trim($u->name)))));
+          $initials = substr($initials, 0, 2);
           [$avBg, $avColor] = $avColors[$i % count($avColors)];
           $statusClass = $u->role === 'admin' ? 'badge-admin' : 'badge-active';
           $statusLabel = ucfirst($u->role ?? 'user');
@@ -539,6 +542,7 @@ body {
 </div>
 
 <script>
+{{-- Weekly streams chart --}}
 const weekDays   = @json($weekDays);
 const weekCounts = @json($weekCounts);
 const maxVal = Math.max(...weekCounts, 1);
@@ -554,6 +558,25 @@ weekDays.forEach((day, i) => {
     <div class="bar-lbl">${day}</div>
   `;
   container.appendChild(wrap);
+});
+
+{{-- iTunes album art for top tracks --}}
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('img.track-art[data-title]').forEach(function (img) {
+    var query = encodeURIComponent(img.dataset.title + ' ' + img.dataset.artist);
+    fetch('https://itunes.apple.com/search?term=' + query + '&media=music&limit=1')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.results && data.results.length > 0) {
+          var art = data.results[0].artworkUrl100.replace('100x100bb', '300x300bb');
+          img.src = art;
+          img.style.display = 'block';
+          var ph = img.closest('.track').querySelector('[data-placeholder]');
+          if (ph) ph.style.display = 'none';
+        }
+      })
+      .catch(function () {});
+  });
 });
 </script>
 

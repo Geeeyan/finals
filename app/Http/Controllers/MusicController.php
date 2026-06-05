@@ -9,7 +9,8 @@ class MusicController extends Controller
 {
     public function index()
     {
-        $music = Music::orderBy('created_at', 'desc')->paginate(20);
+        $music = Music::latest()->paginate(20);
+
         return view('music.index', compact('music'));
     }
 
@@ -20,15 +21,17 @@ class MusicController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'artist' => ['nullable', 'string', 'max:255'],
-            'album' => ['nullable', 'string', 'max:255'],
+        $validated = $request->validate([
+            'title'  => 'required|string|max:255',
+            'artist' => 'nullable|string|max:255',
+            'album'  => 'nullable|string|max:255',
         ]);
 
-        Music::create($data);
+        Music::create($validated);
 
-        return redirect()->route('music.index')->with('status', 'Track created');
+        return redirect()
+            ->route('music.index')
+            ->with('status', 'Track created successfully');
     }
 
     public function show(Music $music)
@@ -43,20 +46,25 @@ class MusicController extends Controller
 
     public function update(Request $request, Music $music)
     {
-        $data = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'artist' => ['nullable', 'string', 'max:255'],
-            'album' => ['nullable', 'string', 'max:255'],
+        $validated = $request->validate([
+            'title'  => 'required|string|max:255',
+            'artist' => 'nullable|string|max:255',
+            'album'  => 'nullable|string|max:255',
         ]);
 
-        $music->update($data);
+        $music->update($validated);
 
-        return redirect()->route('music.index')->with('status', 'Track updated');
+        return redirect()
+            ->route('music.index')
+            ->with('status', 'Track updated successfully');
     }
 
     public function destroy(Music $music)
     {
         $music->delete();
-        return redirect()->route('music.index')->with('status', 'Track deleted');
+
+        return redirect()
+            ->route('music.index')
+            ->with('status', 'Track deleted successfully');
     }
 }

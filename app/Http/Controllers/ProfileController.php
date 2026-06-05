@@ -25,17 +25,24 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request)
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $user = $request->user();
+        $user      = $request->user();
         $validated = $request->validated();
 
-        if ($request->hasFile('profile_image')) {
+        // Handle profile image upload
+        if ($request->hasFile('profile_image') && $request->file('profile_image')->isValid()) {
+            // Delete old image if exists
             if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
                 Storage::disk('public')->delete($user->profile_image);
             }
 
-            $validated['profile_image'] = $request->file('profile_image')->store('profile_images', 'public');
+            // Store new image
+            $validated['profile_image'] = $request->file('profile_image')
+                ->store('profile_images', 'public');
+        } else {
+            // Don't overwrite existing image if no new file uploaded
+            unset($validated['profile_image']);
         }
 
         $user->fill($validated);
@@ -46,12 +53,24 @@ class ProfileController extends Controller
 
         $user->save();
 
-        if ($request->wantsJson() || $request->ajax()) {
-            $profileUrl = $user->profile_image ? Storage::url($user->profile_image) : null;
-            return response()->json([ 'status' => 'profile-updated', 'user' => $user, 'profile_image_url' => $profileUrl ]);
-        }
-
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    }
+
+    /**
+     * Update the user's password.
+     */
+    public function updatePassword(Request $request): RedirectResponse
+    {
+        $validated = $request->validateWithBag('updatePassword', [
+            'current_password' => ['required', 'current_password'],
+            'password'         => ['required', 'confirmed', 'min:8'],
+        ]);
+
+        $request->user()->update([
+            'password' => bcrypt($validated['password']),
+        ]);
+
+        return Redirect::route('profile.edit')->with('status', 'password-updated');
     }
 
     /**
@@ -65,12 +84,12 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        // Delete profile image if exists
         if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
             Storage::disk('public')->delete($user->profile_image);
         }
 
         Auth::logout();
-
         $user->forceDelete();
 
         $request->session()->invalidate();
