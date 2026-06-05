@@ -6,10 +6,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\MusicController;
 
-// Root
+// Root - redirect to login
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 // Home (authenticated users)
@@ -18,8 +20,6 @@ Route::get('/home', function () {
 })->middleware('auth')->name('home');
 
 // Search
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\MusicController;
 Route::get('/search', [SearchController::class, 'index'])
     ->middleware('auth')
     ->name('search');
