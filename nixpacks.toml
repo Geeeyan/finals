@@ -5,10 +5,10 @@ PHP_VERSION = "8.4"
 nixPkgs = ["php84", "php84Extensions.pdo", "php84Extensions.pdo_sqlite", "php84Extensions.sqlite3", "php84Packages.composer"]
 
 [phases.build]
-cmds = ["composer install --no-dev --optimize-autoloader", "php artisan config:cache", "php artisan route:cache", "php artisan storage:link"]
+cmds = ["composer install --no-dev --optimize-autoloader"]
 
 [phases.deploy]
-cmds = ["php artisan migrate --force"]
+cmds = ["php artisan migrate --force", "php artisan storage:link"]
 
 [start]
-cmd = "php -S 0.0.0.0:${PORT:-8080} -t public"
+cmd = "php -S 0.0.0.0:${PORT:-8080} -t public 2>&1"
