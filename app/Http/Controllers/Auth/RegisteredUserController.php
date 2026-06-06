@@ -11,42 +11,43 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
+    // Show register page
     public function create(): View
     {
         return view('auth.register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws ValidationException
-     */
+    // Handle registration
     public function store(Request $request): RedirectResponse
     {
+        // Validate input
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique(User::class)],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Create user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+
+            // ✅ FIX: auto role assignment
+            'role' => 'user',
         ]);
 
+        // Fire event (Laravel default)
         event(new Registered($user));
 
+        // Login user automatically
         Auth::login($user);
 
-        return redirect(route('home', absolute: false))->with('status', 'Registration successful — welcome!');
+        // Redirect after register
+        return redirect('/home')->with('status', 'Registration successful — welcome!');
     }
 }

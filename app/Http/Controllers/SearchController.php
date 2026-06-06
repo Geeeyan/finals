@@ -33,7 +33,6 @@ class SearchController extends Controller
             }
         }
 
-        // If the request expects JSON (AJAX live-search), return compact JSON results
         if ($request->wantsJson() || $request->ajax()) {
             $trackResults = $tracks->map(function ($t) {
                 return [

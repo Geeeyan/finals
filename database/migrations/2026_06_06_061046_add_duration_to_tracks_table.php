@@ -6,17 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('tracks', function (Blueprint $table) {
+            $table->unsignedInteger('duration')->nullable()->after('genre');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::table('tracks', function (Blueprint $table) {
+            $table->dropColumn('duration');
+        });
     }
 };
